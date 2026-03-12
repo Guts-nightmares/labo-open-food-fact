@@ -64,22 +64,29 @@ function displayProduct(product) {
     <h2>${product.name}</h2>
     <div class="nutrient">Energy: ${product.energy} kcal</div>
     <div class="nutrient">Fat: ${product.fat} g</div>
+    <div class="nutrient">Saturated Fat: ${product.saturatedFat} g</div>
+    <div class="nutrient">Carbohydrates: ${product.carbohydrates} g</div>
     <div class="nutrient">Sugars: ${product.sugars} g</div>
+    <div class="nutrient">Fiber: ${product.fiber} g</div>
     <div class="nutrient">Proteins: ${product.proteins} g</div>
+    <div class="nutrient">Salt: ${product.salt} g</div>
+    <div class="nutrient">Sodium: ${product.sodium} g</div>
     <div class="nutrient">Quantity: ${product.quantity}</div>
   `;
+}
+
+function storeLocalStorage() {
+
 }
 
 async function neededData(productCode) {
   try {
     const data = await callAPI(productCode);
 
-    console.log(data);
-
     if (data.status === "success" && data.product) {
       const product = new Product(data.product);
-      console.log(data.product.energy);
       displayProduct(product);
+      storeLocalStorage(product);
     } else {
       console.warn("Product not found or API returned an error");
       return null;
@@ -89,15 +96,6 @@ async function neededData(productCode) {
     return null;
   }
 }
-
-// async function createObj() {
-//   const data = await callAPI("7622210449283");
-//   console.log(data.product);
-
-//   const product = new Product(data.product);
-//   console.log(product);
-// }
-
 
 
 
