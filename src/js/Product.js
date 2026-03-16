@@ -1,4 +1,6 @@
 export default class Product {
+  #codeBarre;
+  #imageUrl;
   #name;
   #energy;
   #fat;
@@ -12,6 +14,8 @@ export default class Product {
   #quantity;
 
   constructor(data) {
+    this.#codeBarre = data.code || "";
+    this.#imageUrl = data.image_url || "";
     this.#name = data.product_name_en || "";
     this.#energy = data.nutriments?.energy || "?";
     this.#fat = data.nutriments?.fat || "?";
@@ -25,6 +29,12 @@ export default class Product {
     this.#quantity = data.quantity || "";
   }
 
+  get codeBarre(){
+    return this.#codeBarre;
+  }
+  get imageUrl(){
+    return this.#imageUrl;
+  }
   get name() {
     return this.#name;
   }
