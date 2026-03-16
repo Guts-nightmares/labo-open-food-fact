@@ -62,6 +62,7 @@ function displayProduct(product) {
   const container = document.getElementById("product");
   container.innerHTML = `
     <h2>${product.name}</h2>
+    <img src="${product.imageUrl}" alt="${product.name}" width="500" height="600">
     <div class="nutrient">Energy: ${product.energy} kcal</div>
     <div class="nutrient">Fat: ${product.fat} g</div>
     <div class="nutrient">Saturated Fat: ${product.saturatedFat} g</div>
