@@ -81,19 +81,24 @@ function storeLocalStorage(product) {
   let codeBarre = product.codeBarre;
 
   const productData = {
-      Name: product.name,
-      Energy: product.energy,
-      Fat: product.fat,
-      SaturatedFat: product.saturatedFat,
-      Carbohydrates: product.carbohydrates,
-      Sugars: product.sugars,
-      Fiber: product.fiber,
-      Proteins: product.proteins,
-      Salt: product.salt,
-      Sodium: product.sodium,
-      Quantity: product.quantity,
-      lastUpdated: Date(Date.now() * 1000)
-
+    code: product.codeBarre,
+    product: {
+      image_url: product.imageUrl,
+      product_name_en: product.name,
+      nutriments: {
+        energy: product.energy,
+        fat: product.fat,
+        saturated_fat: product.saturatedFat,
+        carbohydrates: product.carbohydrates,
+        sugars: product.sugars,
+        fiber: product.fiber,
+        proteins: product.proteins,
+        salt: product.salt,
+        sodium: product.sodium
+      },
+      quantity: product.quantity
+    },
+    lastUpdated: new Date().toISOString()
   };
 
   let products = JSON.parse(localStorage.getItem("products")) || {};
@@ -108,21 +113,40 @@ function storeLocalStorage(product) {
 
 
 async function neededData(productCode) {
-  try {
-    const data = await callAPI(productCode);
+  
+  let product;
+  
+  const savedData = getProductFromLocalStorageIfExist(productCode);
 
+  if (savedData != false)
+    product = new Product(savedData);
+  else {
+
+    const data = await callAPI(productCode);
     if (data.status === "success" && data.product) {
-      const product = new Product(data);
-      displayProduct(product);
+      product = new Product(data);
       storeLocalStorage(product);
-    } else {
+    } 
+    else {
       console.warn("Product not found or API returned an error");
       return null;
     }
-  } catch (error) {
-    console.error("Error fetching product:", error);
-    return null;
+
   }
+
+  displayProduct(product);
+  return product;
 }
 
 window.neededData = neededData;
+
+
+function getProductFromLocalStorageIfExist(productCode){
+  const productsStr = localStorage.getItem("products");
+  
+  if (!productsStr) return false;
+
+  const products = JSON.parse(productsStr);
+
+  return products[productCode] || false;
+}
