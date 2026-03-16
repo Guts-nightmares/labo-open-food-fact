@@ -81,6 +81,7 @@ function storeLocalStorage(product) {
   let codeBarre = product.codeBarre;
 
   const productData = {
+      Name: product.name,
       Energy: product.energy,
       Fat: product.fat,
       SaturatedFat: product.saturatedFat,
