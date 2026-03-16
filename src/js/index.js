@@ -76,9 +76,35 @@ function displayProduct(product) {
   `;
 }
 
-function storeLocalStorage() {
+function storeLocalStorage(product) {
 
+  let codeBarre = product.codeBarre;
+
+  const productData = {
+      Energy: product.energy,
+      Fat: product.fat,
+      SaturatedFat: product.saturatedFat,
+      Carbohydrates: product.carbohydrates,
+      Sugars: product.sugars,
+      Fiber: product.fiber,
+      Proteins: product.proteins,
+      Salt: product.salt,
+      Sodium: product.sodium,
+      Quantity: product.quantity,
+      lastUpdated: Date(Date.now() * 1000)
+
+  };
+
+  let products = JSON.parse(localStorage.getItem("products")) || {};
+
+
+
+  products[codeBarre] = productData;
+
+  localStorage.setItem("products", JSON.stringify(products));
+  
 }
+
 
 async function neededData(productCode) {
   try {
