@@ -123,3 +123,5 @@ async function neededData(productCode) {
     return null;
   }
 }
+
+window.neededData = neededData;
