@@ -85,7 +85,7 @@ async function neededData(productCode) {
     const data = await callAPI(productCode);
 
     if (data.status === "success" && data.product) {
-      const product = new Product(data.product);
+      const product = new Product(data);
       displayProduct(product);
       storeLocalStorage(product);
     } else {
