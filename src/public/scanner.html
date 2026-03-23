@@ -66,7 +66,7 @@
                                         console.log(ZXing.BarcodeFormat.EAN_13 == result.format);
                                         document.getElementById('result').innerHTML = result.text;
                                         codeReader.reset();
-                                        neededData(result.text);
+                                        // window.location.href = `/src/public/product.html?code=${result.text}`;
                                     }
                                     if (err && !(err instanceof ZXing.NotFoundException)) {
                                         console.error(err);
@@ -90,6 +90,8 @@
                 })
                 .catch((err) => {
                     console.error(err)
+                                        window.location.href = `/src/public/product.html?code=7612100907603`;
+
                 })
         })
 

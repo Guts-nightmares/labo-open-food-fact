@@ -150,3 +150,6 @@ function getProductFromLocalStorageIfExist(productCode){
 
   return products[productCode] || false;
 }
+
+const code = new URLSearchParams(window.location.search).get("code");
+neededData(code);
