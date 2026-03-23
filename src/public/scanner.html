@@ -66,7 +66,7 @@
                                         console.log(ZXing.BarcodeFormat.EAN_13 == result.format);
                                         document.getElementById('result').innerHTML = result.text;
                                         codeReader.reset();
-                                        // window.location.href = `/src/public/product.html?code=${result.text}`;
+                                        window.location.href = `/src/public/product.html?code=${result.text}`;
                                     }
                                     if (err && !(err instanceof ZXing.NotFoundException)) {
                                         console.error(err);
@@ -83,15 +83,13 @@
 
                     document.getElementById('resetButton').addEventListener('click', () => {
                         codeReader.reset();
-                        document.getElementById('result').innerHTML = '';;
+                        document.getElementById('result').innerHTML = '';
                         console.log('Reset.');
                     });
 
                 })
                 .catch((err) => {
-                    console.error(err)
-                                        window.location.href = `/src/public/product.html?code=7612100907603`;
-
+                    console.error(err);
                 })
         })
 
