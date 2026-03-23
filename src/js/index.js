@@ -111,6 +111,19 @@ function storeLocalStorage(product) {
   
 }
 
+async function fetchAndStore(productCode) {
+  const data = await callAPI(productCode);
+
+  if (data.status === "success" && data.product) {
+    const product = new Product(data);
+    storeLocalStorage(product);
+    return product;
+  } else {
+    console.warn("Product not found or API returned an error");
+    return null;
+  }
+}
+
 
 async function neededData(productCode) {
   
@@ -118,21 +131,17 @@ async function neededData(productCode) {
   
   const savedData = getProductFromLocalStorageIfExist(productCode);
 
-  if (savedData != false)
-    product = new Product(savedData);
-  else {
+  if (savedData != false){
 
-    const data = await callAPI(productCode);
-    if (data.status === "success" && data.product) {
-      product = new Product(data);
-      storeLocalStorage(product);
-    } 
-    else {
-      console.warn("Product not found or API returned an error");
-      return null;
-    }
-
+    // if the product is int localStorage since 1 month, recall api
+    if(isExpired(savedData.lastUpdated))
+      product = await fetchAndStore(productCode);
+    else
+      product = new Product(savedData);
+    
   }
+  else
+    product = await fetchAndStore(productCode);
 
   displayProduct(product);
   return product;
@@ -149,6 +158,19 @@ function getProductFromLocalStorageIfExist(productCode){
   const products = JSON.parse(productsStr);
 
   return products[productCode] || false;
+}
+
+function isExpired(date){
+
+  const day = 30;
+
+  const d = new Date(date);
+  const now = new Date();
+
+  d.setDate(d.getDate() + 30);
+
+  return now > d;
+
 }
 
 const code = new URLSearchParams(window.location.search).get("code");
