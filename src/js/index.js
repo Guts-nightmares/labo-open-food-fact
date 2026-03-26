@@ -5,8 +5,6 @@ const BASE_URL = "https://world.openfoodfacts.org/api/v3/product/";
 const FIELDS =
   "nutriments,image_url,product_name_en,nutriscore_grades,quantity";
 
-console.log(httpsErrorCode);
-
 async function fetchData(productCode) {
   const url = `${BASE_URL}${productCode}?fields=${FIELDS}`;
 
