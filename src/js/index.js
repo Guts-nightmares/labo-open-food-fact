@@ -101,6 +101,19 @@ function storeLocalStorage(product) {
   localStorage.setItem("lastProductCode", codeBarre);
 }
 
+async function fetchAndStore(productCode) {
+  const data = await callAPI(productCode);
+
+  if (data.status === "success" && data.product) {
+    const product = new Product(data);
+    storeLocalStorage(product);
+    return product;
+  } else {
+    console.warn("Product not found or API returned an error");
+    return null;
+  }
+}
+
 
 async function handleFetch(productCode) {
   
@@ -112,7 +125,7 @@ async function handleFetch(productCode) {
     product = new Product(savedData);
   else {
 
-    const data = await fetchData(productCode);
+    const data = await callAPI(productCode);
     if (data.status === "success" && data.product) {
       product = new Product(data);
       storeLocalStorage(product);
@@ -139,60 +152,6 @@ function getProductFromLocalStorageIfExist(productCode){
 
   return products[productCode] || false;
 }
-
-
-
-
-
-
-
-
-
-const slider = document.querySelector("#slider");
-
-slider.addEventListener("input", () => {
-  const lastProductCode = localStorage.getItem("lastProductCode");
-  if (!lastProductCode) return;
-
-  const products = JSON.parse(localStorage.getItem("products"));
-  if (!products || !products[lastProductCode]) return;
-
-  const storedData = products[lastProductCode];
-  const product = storedData.product;
-  const desiredQuantity = Number(slider.value);
-
-  const baseQuantity = parseFloat(product.quantity) || 1;
-  const factor = desiredQuantity / baseQuantity;
-
-  const scale = (value) => {
-    const num = parseFloat(value);
-    return isNaN(num) ? value : (num * factor).toFixed(2);
-  };
-
-  const container = document.getElementById("product");
-
-  container.innerHTML = `
-    <h2>${product.product_name_en}</h2>
-    <img src="${product.image_url}" alt="${product.product_name_en}" width="500" height="600">
-    <div class="nutrient">Energy: ${scale(product.nutriments.energy)} kcal</div>
-    <div class="nutrient">Fat: ${scale(product.nutriments.fat)} g</div>
-    <div class="nutrient">Saturated Fat: ${scale(product.nutriments.saturated_fat)} g</div>
-    <div class="nutrient">Carbohydrates: ${scale(product.nutriments.carbohydrates)} g</div>
-    <div class="nutrient">Sugars: ${scale(product.nutriments.sugars)} g</div>
-    <div class="nutrient">Fiber: ${product.nutriments.fiber === "?" ? "?" : scale(product.nutriments.fiber)} g</div>
-    <div class="nutrient">Proteins: ${scale(product.nutriments.proteins)} g</div>
-    <div class="nutrient">Salt: ${scale(product.nutriments.salt)} g</div>
-    <div class="nutrient">Sodium: ${scale(product.nutriments.sodium)} g</div>
-    <div class="nutrient">Quantity: ${desiredQuantity} g/ml</div>
-  `;
-});
-
-
-
-
-
-
-
 
 const code = new URLSearchParams(window.location.search).get("code");
 handleFetch(code);
