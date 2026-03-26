@@ -150,7 +150,7 @@ function getProductFromLocalStorageIfExist(productCode){
 
 const slider = document.querySelector("#slider");
 
-slider.addEventListener('oninput', () => {
+slider.addEventListener('input', () => {
   const lastProductCode = localStorage.getItem("lastProductCode");
   if (!lastProductCode) return;
 
@@ -185,7 +185,7 @@ slider.addEventListener('oninput', () => {
     <div class="nutrient">Sodium: ${scale(product.nutriments.sodium)} g</div>
     <div class="nutrient">Quantity: ${desiredQuantity} g/ml</div>
   `;
-});
+})
 
 
 
