@@ -2,129 +2,124 @@
 <html lang="en">
 
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Scanner</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <title>Scanner</title>
+    <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500&display=swap"
+        rel="stylesheet">
 
 </head>
 
 <body class="bg-[#121212] text-gray-200 flex flex-col items-center justify-center min-h-screen p-6 font-[Inter]">
 
-<main class="flex flex-col items-center gap-8">
+    <main class="flex flex-col items-center gap-8">
 
-    <h1 class="font-[Cinzel] text-3xl tracking-wide text-gray-300">
-        Scanner
-    </h1>
+        <h1 class="font-[Cinzel] text-3xl tracking-wide text-gray-300">
+            Scanner
+        </h1>
 
-    <div class="flex gap-4">
+        <div class="flex gap-4">
 
-        <button id="startButton"
-            class="px-6 py-2.5 rounded-lg bg-[#2a2a2a] border border-gray-600
+            <button id="startButton" class="px-6 py-2.5 rounded-lg bg-[#2a2a2a] border border-gray-600
                    hover:bg-[#333] transition text-sm tracking-wide">
-            Start
-        </button>
+                Start
+            </button>
 
-        <button id="resetButton"
-            class="px-6 py-2.5 rounded-lg bg-[#1f1f1f] border border-gray-700
+            <button id="resetButton" class="px-6 py-2.5 rounded-lg bg-[#1f1f1f] border border-gray-700
                    hover:bg-[#2a2a2a] transition text-sm tracking-wide">
-            Reset
-        </button>
+                Reset
+            </button>
 
-    </div>
-
-    <div class="bg-[#1a1a1a] p-4 rounded-xl border border-gray-700 shadow-md">
-        <video id="video"
-            class="w-[320px] h-[220px] rounded-md bg-black">
-        </video>
-    </div>
-
-    <div id="sourceSelectPanel" class="hidden flex flex-col items-center gap-2">
-        <label class="text-gray-400 text-sm">Camera</label>
-
-        <select id="sourceSelect"
-            class="bg-[#1a1a1a] border border-gray-600 rounded-md px-3 py-2 text-sm">
-        </select>
-    </div>
-
-    <div class="flex flex-col items-center gap-2">
-
-        <span class="text-gray-400 text-sm">
-            Result
-        </span>
-
-        <div id="result"
-            class="w-52 h-14 flex items-center justify-center
-                   bg-[#1a1a1a] border border-gray-700 rounded-lg
-                   text-gray-200 text-sm">
         </div>
 
-    </div>
+        <div class="bg-[#1a1a1a] p-4 rounded-xl border border-gray-700 shadow-md">
+            <video id="video" class="w-[320px] h-[220px] rounded-md bg-black">
+            </video>
+        </div>
 
-</main>
+        <div id="sourceSelectPanel" class="hidden flex flex-col items-center gap-2">
+            <label class="text-gray-400 text-sm">Camera</label>
 
-<script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+            <select id="sourceSelect" class="bg-[#1a1a1a] border border-gray-600 rounded-md px-3 py-2 text-sm">
+            </select>
+        </div>
 
-<script>
-window.addEventListener('load', function () {
+        <div class="flex flex-col items-center gap-2">
 
-    let selectedDeviceId;
-    const codeReader = new ZXing.BrowserMultiFormatReader();
+            <span class="text-gray-400 text-sm">
+                Result
+            </span>
 
-    codeReader.listVideoInputDevices()
-        .then((videoInputDevices) => {
+            <div id="result" class="w-52 h-14 flex items-center justify-center
+                   bg-[#1a1a1a] border border-gray-700 rounded-lg
+                   text-gray-200 text-sm">
+            </div>
 
-            const sourceSelect = document.getElementById('sourceSelect');
-            selectedDeviceId = videoInputDevices[0].deviceId;
+        </div>
 
-            if (videoInputDevices.length >= 1) {
+    </main>
 
-                videoInputDevices.forEach((element) => {
-                    const option = document.createElement('option');
-                    option.text = element.label;
-                    option.value = element.deviceId;
-                    sourceSelect.appendChild(option);
-                });
+    <script>
+        window.addEventListener('load', function () {
 
-                sourceSelect.onchange = () => {
-                    selectedDeviceId = sourceSelect.value;
-                };
+            let selectedDeviceId;
+            const codeReader = new ZXing.BrowserMultiFormatReader();
 
-                document.getElementById('sourceSelectPanel').classList.remove('hidden');
-            }
+            codeReader.listVideoInputDevices()
+                .then((videoInputDevices) => {
 
-            document.getElementById('startButton').addEventListener('click', () => {
+                    const sourceSelect = document.getElementById('sourceSelect');
+                    selectedDeviceId = videoInputDevices[0].deviceId;
 
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(() => {
-                        codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
+                    if (videoInputDevices.length >= 1) {
 
-                            if (result) {
-                                document.getElementById('result').innerHTML = result.text;
-                                codeReader.reset();
-                                window.location.href = `/src/public/product.html?code=${result.text}`;
-                            }
-
-                            if (err && !(err instanceof ZXing.NotFoundException)) {
-                                document.getElementById('result').innerHTML = "Error";
-                            }
+                        videoInputDevices.forEach((element) => {
+                            const option = document.createElement('option');
+                            option.text = element.label;
+                            option.value = element.deviceId;
+                            sourceSelect.appendChild(option);
                         });
+
+                        sourceSelect.onchange = () => {
+                            selectedDeviceId = sourceSelect.value;
+                        };
+
+                        document.getElementById('sourceSelectPanel').classList.remove('hidden');
+                    }
+
+                    document.getElementById('startButton').addEventListener('click', () => {
+
+                        navigator.mediaDevices.getUserMedia({ video: true })
+                            .then(() => {
+                                codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
+
+                                    if (result) {
+                                        document.getElementById('result').innerHTML = result.text;
+                                        codeReader.reset();
+                                        window.location.href = `/src/public/product.html?code=${result.text}`;
+                                    }
+
+                                    if (err && !(err instanceof ZXing.NotFoundException)) {
+                                        document.getElementById('result').innerHTML = "Error";
+                                    }
+                                });
+                            });
+
                     });
 
-            });
+                    document.getElementById('resetButton').addEventListener('click', () => {
+                        codeReader.reset();
+                        document.getElementById('result').innerHTML = '';
+                    });
 
-            document.getElementById('resetButton').addEventListener('click', () => {
-                codeReader.reset();
-                document.getElementById('result').innerHTML = '';
-            });
+                });
 
         });
-
-});
-</script>
+    </script>
 
 </body>
+
 </html>
