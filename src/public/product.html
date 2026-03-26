@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product</title>
+    <script type="module" src="/src/js/index.js" defer></script>
 </head>
 <body>
-    <!-- <button onclick="neededData('7622210449283')">BTN</button> -->
 
+    <div id="product"></div>
 
     <div id="error-message" style="color: red; margin-top: 10px;"></div>
-
-    <script type="module" src="/src/js/index.js" defer></script>
-    <!-- <script type="module" src="/src/js/Product.js" defer></script> -->
-
+    <h1>Quantity</h1>
+    <input type="range" id="slider" value="100" max="200" step="10" oninput="document.querySelector('#value-slider').textContent = this.value" >
+    <p id="value-slider"></p>
 
     <div id="product"></div> 
 </body>
