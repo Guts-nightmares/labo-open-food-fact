@@ -2,100 +2,129 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="ZXing for JS">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>ZXing TypeScript | Decoding from camera stream</title>
+<title>Scanner</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
 </head>
 
-<body>
-    <div>
-        <button id="startButton">Start</button>
-        <button id="resetButton">Reset</button>
+<body class="bg-[#121212] text-gray-200 flex flex-col items-center justify-center min-h-screen p-6 font-[Inter]">
+
+<main class="flex flex-col items-center gap-8">
+
+    <h1 class="font-[Cinzel] text-3xl tracking-wide text-gray-300">
+        Scanner
+    </h1>
+
+    <div class="flex gap-4">
+
+        <button id="startButton"
+            class="px-6 py-2.5 rounded-lg bg-[#2a2a2a] border border-gray-600
+                   hover:bg-[#333] transition text-sm tracking-wide">
+            Start
+        </button>
+
+        <button id="resetButton"
+            class="px-6 py-2.5 rounded-lg bg-[#1f1f1f] border border-gray-700
+                   hover:bg-[#2a2a2a] transition text-sm tracking-wide">
+            Reset
+        </button>
+
     </div>
 
-    <div>
-        <video id="video" width="300" height="200" style="border: 1px solid gray"></video>
+    <div class="bg-[#1a1a1a] p-4 rounded-xl border border-gray-700 shadow-md">
+        <video id="video"
+            class="w-[320px] h-[220px] rounded-md bg-black">
+        </video>
     </div>
 
-    <div id="sourceSelectPanel" style="display:none">
-        <label for="sourceSelect">Change video source:</label>
-        <select id="sourceSelect" style="max-width:400px">
+    <div id="sourceSelectPanel" class="hidden flex flex-col items-center gap-2">
+        <label class="text-gray-400 text-sm">Camera</label>
+
+        <select id="sourceSelect"
+            class="bg-[#1a1a1a] border border-gray-600 rounded-md px-3 py-2 text-sm">
         </select>
     </div>
 
-    <label>Result:</label>
-    <div id="result"></div>
+    <div class="flex flex-col items-center gap-2">
 
-    <div id="product"></div>
+        <span class="text-gray-400 text-sm">
+            Result
+        </span>
 
-    <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
-    <script type="module" src="../js/index.js"></script>
-    <script type="text/javascript">
-        window.addEventListener('load', function () {
-            let selectedDeviceId;
-            const codeReader = new ZXing.BrowserMultiFormatReader();
-            console.log('ZXing code reader initialized');
-            codeReader.listVideoInputDevices()
-                .then((videoInputDevices) => {
-                    const sourceSelect = document.getElementById('sourceSelect');
-                    selectedDeviceId = videoInputDevices[0].deviceId;
-                    if (videoInputDevices.length >= 1) {
-                        videoInputDevices.forEach((element) => {
-                            const sourceOption = document.createElement('option');
-                            sourceOption.text = element.label;
-                            sourceOption.value = element.deviceId;
-                            sourceSelect.appendChild(sourceOption);
-                        })
+        <div id="result"
+            class="w-52 h-14 flex items-center justify-center
+                   bg-[#1a1a1a] border border-gray-700 rounded-lg
+                   text-gray-200 text-sm">
+        </div>
 
-                        sourceSelect.onchange = () => {
-                            selectedDeviceId = sourceSelect.value;
-                        };
+    </div>
 
-                        const sourceSelectPanel = document.getElementById('sourceSelectPanel');
-                        sourceSelectPanel.style.display = 'block';
-                    }
+</main>
 
-                    document.getElementById('startButton').addEventListener('click', () => {
-                        navigator.mediaDevices.getUserMedia({ video: true })
-                            .then(() => {
-                                codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
-                                    if (result) {
-                                        console.log(result);
-                                        console.log(ZXing.BarcodeFormat.EAN_13 == result.format);
-                                        document.getElementById('result').innerHTML = result.text;
-                                        codeReader.reset();
-                                        window.location.href = `/src/public/product.html?code=${result.text}`;
-                                    }
-                                    if (err && !(err instanceof ZXing.NotFoundException)) {
-                                        console.error(err);
-                                        document.getElementById('result').innerHTML = err;
-                                    }
-                                });
-                            })
-                            .catch((err) => {
-                                console.error("User doesn't allowed to access camera or an error occurred:", err);
-                            });
+<script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
 
-                        console.log(`Started continous decode from camera with id ${selectedDeviceId}`);
+<script>
+window.addEventListener('load', function () {
+
+    let selectedDeviceId;
+    const codeReader = new ZXing.BrowserMultiFormatReader();
+
+    codeReader.listVideoInputDevices()
+        .then((videoInputDevices) => {
+
+            const sourceSelect = document.getElementById('sourceSelect');
+            selectedDeviceId = videoInputDevices[0].deviceId;
+
+            if (videoInputDevices.length >= 1) {
+
+                videoInputDevices.forEach((element) => {
+                    const option = document.createElement('option');
+                    option.text = element.label;
+                    option.value = element.deviceId;
+                    sourceSelect.appendChild(option);
+                });
+
+                sourceSelect.onchange = () => {
+                    selectedDeviceId = sourceSelect.value;
+                };
+
+                document.getElementById('sourceSelectPanel').classList.remove('hidden');
+            }
+
+            document.getElementById('startButton').addEventListener('click', () => {
+
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(() => {
+                        codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
+
+                            if (result) {
+                                document.getElementById('result').innerHTML = result.text;
+                                codeReader.reset();
+                                window.location.href = `/src/public/product.html?code=${result.text}`;
+                            }
+
+                            if (err && !(err instanceof ZXing.NotFoundException)) {
+                                document.getElementById('result').innerHTML = "Error";
+                            }
+                        });
                     });
 
-                    document.getElementById('resetButton').addEventListener('click', () => {
-                        codeReader.reset();
-                        document.getElementById('result').innerHTML = '';
-                        console.log('Reset.');
-                    });
+            });
 
-                })
-                .catch((err) => {
-                    console.error(err);
-                })
-        })
+            document.getElementById('resetButton').addEventListener('click', () => {
+                codeReader.reset();
+                document.getElementById('result').innerHTML = '';
+            });
 
+        });
 
-    </script>
+});
+</script>
 
 </body>
-
 </html>
