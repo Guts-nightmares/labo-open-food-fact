@@ -146,31 +146,7 @@ slider.addEventListener('input', () => {
         return isNaN(num) ? "?" : (num * factor).toFixed(2);
     };
 
-<<<<<<< HEAD
-  const baseQuantity = parseFloat(product.quantity) || 1;
-  const factor = desiredQuantity / baseQuantity;
 
-  const scale = (value) => {
-    const num = parseFloat(value);
-    return isNaN(num) ? value : (num * factor).toFixed(2);
-  };
-
-  const container = document.getElementById("product");
-
-  container.innerHTML = `
-    <h2>${product.product_name_en}</h2>
-    <img src="${product.image_url}" alt="image : ${product.product_name_en}" width="500" height="600">
-    <div class="nutrient">Energy: ${scale(product.nutriments.energy)} kcal</div>
-    <div class="nutrient">Fat: ${scale(product.nutriments.fat)} g</div>
-    <div class="nutrient">Saturated Fat: ${scale(product.nutriments['saturated-fat'])} g</div>
-    <div class="nutrient">Carbohydrates: ${scale(product.nutriments.carbohydrates)} g</div>
-    <div class="nutrient">Sugars: ${scale(product.nutriments.sugars)} g</div>
-    <div class="nutrient">Fiber: ${product.nutriments.fiber === "?" ? "?" : scale(product.nutriments.fiber)} g</div>
-    <div class="nutrient">Proteins: ${scale(product.nutriments.proteins)} g</div>
-    <div class="nutrient">Salt: ${scale(product.nutriments.salt)} g</div>
-    <div class="nutrient">Sodium: ${scale(product.nutriments.sodium)} g</div>
-    <div class="nutrient">Quantity: <span class="quantity-value">${desiredQuantity}</span> g/ml</div>  `;
-=======
     const container = document.getElementById("product");
     container.innerHTML = `
     <h2>${currentProduct.name}</h2>
@@ -185,7 +161,6 @@ slider.addEventListener('input', () => {
     <div class="nutrient">Salt: ${scale(currentProduct.salt)} g</div>
     <div class="nutrient">Sodium: ${scale(currentProduct.sodium)} g</div>
     <div class="nutrient">Quantity: <span class="quantity-value">${desiredQuantity}</span> g/ml</div>`;
->>>>>>> 8fc1aac77382566764d83b01083554308abda98e
 });
 
 let currentProduct = null;
