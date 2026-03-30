@@ -12,14 +12,14 @@ export default class Product {
   #salt;
   #sodium;
   #quantity;
-  
+
   constructor(data) {
     this.#codeBarre = data.code ?? "";
     this.#imageUrl = data.product.image_url ?? "";
     this.#name = data.product.product_name_en ?? "";
     this.#energy = data.product.nutriments?.energy ?? "?";
     this.#fat = data.product.nutriments?.fat ?? "?";
-    this.#saturatedFat = data.product.nutriments?.saturated_fat ?? "?";
+    this.#saturatedFat = data.product.nutriments?.["saturated-fat"] ?? "?";
     this.#carbohydrates = data.product.nutriments?.carbohydrates ?? "?";
     this.#sugars = data.product.nutriments?.sugars ?? "?";
     this.#fiber = data.product.nutriments?.fiber ?? "?";

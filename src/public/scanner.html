@@ -60,6 +60,12 @@
 
         </div>
 
+        <div id="search-with-code-div">
+            <input type="number" id="search-with-code-codebar" style="background-color: aqua;">
+            <input type="button" value="Go" style="background-color: aqua;"
+                onclick="window.location.href = `/src/public/product.html?code=${document.querySelector('#search-with-code-codebar').value}`;">
+        </div>
+
     </main>
 
     <script>

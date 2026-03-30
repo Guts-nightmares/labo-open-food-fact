@@ -3,7 +3,7 @@ import httpsErrorCode from "./utils.js";
 
 const BASE_URL = "https://world.openfoodfacts.org/api/v3/product/";
 const FIELDS =
-  "nutriments,image_url,product_name_en,nutriscore_grades,quantity";
+  "nutriments,image_url,product_name_en,quantity";
 
 console.log(httpsErrorCode);
 
@@ -81,7 +81,7 @@ function storeLocalStorage(product) {
       nutriments: {
         energy: product.energy,
         fat: product.fat,
-        saturated_fat: product.saturatedFat,
+        ['saturated-fat']: product.saturatedFat,
         carbohydrates: product.carbohydrates,
         sugars: product.sugars,
         fiber: product.fiber,
@@ -101,30 +101,35 @@ function storeLocalStorage(product) {
   localStorage.setItem("lastProductCode", codeBarre);
 }
 
-
 async function handleFetch(productCode) {
-  
   let product;
-  
+
   const savedData = getProductFromLocalStorageIfExist(productCode);
 
-  if (savedData != false)
+  if (savedData != false) {
     product = new Product(savedData);
-  else {
-
+  } else {
     const data = await fetchData(productCode);
     if (data.status === "success" && data.product) {
       product = new Product(data);
       storeLocalStorage(product);
-    } 
-    else {
+    } else {
       console.warn("Product not found or API returned an error");
       return null;
     }
-
   }
 
   displayProduct(product);
+
+  const slider = document.getElementById("slider");
+  const valueDisplay = document.getElementById("value-slider");
+  const baseQuantity = parseFloat(product.quantity) || 100;
+
+  slider.min = 0;
+  slider.max = baseQuantity * 2;
+  slider.value = baseQuantity;
+  valueDisplay.textContent = baseQuantity;
+
   return product;
 }
 
@@ -151,6 +156,7 @@ function getProductFromLocalStorageIfExist(productCode){
 const slider = document.querySelector("#slider");
 
 slider.addEventListener('input', () => {
+  document.getElementById("value-slider").textContent = slider.value;
   const lastProductCode = localStorage.getItem("lastProductCode");
   if (!lastProductCode) return;
 
@@ -176,16 +182,15 @@ slider.addEventListener('input', () => {
     <img src="${product.image_url}" alt="${product.product_name_en}" width="500" height="600">
     <div class="nutrient">Energy: ${scale(product.nutriments.energy)} kcal</div>
     <div class="nutrient">Fat: ${scale(product.nutriments.fat)} g</div>
-    <div class="nutrient">Saturated Fat: ${scale(product.nutriments.saturated_fat)} g</div>
+    <div class="nutrient">Saturated Fat: ${scale(product.nutriments['saturated-fat'])} g</div>
     <div class="nutrient">Carbohydrates: ${scale(product.nutriments.carbohydrates)} g</div>
     <div class="nutrient">Sugars: ${scale(product.nutriments.sugars)} g</div>
     <div class="nutrient">Fiber: ${product.nutriments.fiber === "?" ? "?" : scale(product.nutriments.fiber)} g</div>
     <div class="nutrient">Proteins: ${scale(product.nutriments.proteins)} g</div>
     <div class="nutrient">Salt: ${scale(product.nutriments.salt)} g</div>
     <div class="nutrient">Sodium: ${scale(product.nutriments.sodium)} g</div>
-    <div class="nutrient">Quantity: ${desiredQuantity} g/ml</div>
-  `;
-})
+    <div class="nutrient">Quantity: <span class="quantity-value">${desiredQuantity}</span> g/ml</div>  `;
+});
 
 
 
