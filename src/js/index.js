@@ -91,12 +91,7 @@ function storeLocalStorage(product) {
     },
     lastUpdated: new Date().toISOString(),
   };
-
-  let products = JSON.parse(localStorage.getItem("products")) || {};
-  products[codeBarre] = productData;
-  localStorage.setItem("products", JSON.stringify(products));
-
-  localStorage.setItem("lastProductCode", codeBarre);
+  localStorage.setItem(codeBarre, JSON.stringify(productData));
 }
 
 async function handleFetch(productCode) {
@@ -116,9 +111,7 @@ async function handleFetch(productCode) {
       return null;
     }
   }
-
   displayProduct(product);
-
   const slider = document.getElementById("slider");
   const valueDisplay = document.getElementById("value-slider");
   const baseQuantity = parseFloat(product.quantity) || 100;
@@ -131,8 +124,6 @@ async function handleFetch(productCode) {
   return product;
 }
 
-
-
 function getProductFromLocalStorageIfExist(productCode){
   const productsStr = localStorage.getItem("products");
   
@@ -142,14 +133,6 @@ function getProductFromLocalStorageIfExist(productCode){
 
   return products[productCode] || false;
 }
-
-
-
-
-
-
-
-
 
 const slider = document.querySelector("#slider");
 
@@ -177,7 +160,7 @@ slider.addEventListener('input', () => {
 
   container.innerHTML = `
     <h2>${product.product_name_en}</h2>
-    <img src="${product.image_url}" alt="${product.product_name_en}" width="500" height="600">
+    <img src="${product.image_url}" alt="image : ${product.product_name_en}" width="500" height="600">
     <div class="nutrient">Energy: ${scale(product.nutriments.energy)} kcal</div>
     <div class="nutrient">Fat: ${scale(product.nutriments.fat)} g</div>
     <div class="nutrient">Saturated Fat: ${scale(product.nutriments['saturated-fat'])} g</div>
@@ -198,5 +181,5 @@ slider.addEventListener('input', () => {
 
 
 const code = new URLSearchParams(window.location.search).get("code");
-handleFetch(code);
+let product_obj = handleFetch(code);
 
