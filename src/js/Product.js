@@ -12,27 +12,26 @@ export default class Product {
   #salt;
   #sodium;
   #quantity;
-
+  
   constructor(data) {
-    this.#codeBarre = data.code || "";
-    this.#imageUrl = data.product.image_url || "";
-    this.#name = data.product.product_name_en || "";
-    this.#energy = data.product.nutriments?.energy || "?";
-    this.#fat = data.product.nutriments?.fat || "?";
-    this.#saturatedFat = data.product.nutriments?.saturated_fat || "?";
-    this.#carbohydrates = data.product.nutriments?.carbohydrates || "?";
-    this.#sugars = data.product.nutriments?.sugars || "?";
-    this.#fiber = data.product.nutriments?.fiber || "?";
-    this.#proteins = data.product.nutriments?.proteins || "?";
-    this.#salt = data.product.nutriments?.salt || "?";
-    this.#sodium = data.product.nutriments?.sodium || "?";
-    this.#quantity = data.product.quantity || "";
+    this.#codeBarre = data.code ?? "";
+    this.#imageUrl = data.product.image_url ?? "";
+    this.#name = data.product.product_name_en ?? "";
+    this.#energy = data.product.nutriments?.energy ?? "?";
+    this.#fat = data.product.nutriments?.fat ?? "?";
+    this.#saturatedFat = data.product.nutriments?.saturated_fat ?? "?";
+    this.#carbohydrates = data.product.nutriments?.carbohydrates ?? "?";
+    this.#sugars = data.product.nutriments?.sugars ?? "?";
+    this.#fiber = data.product.nutriments?.fiber ?? "?";
+    this.#proteins = data.product.nutriments?.proteins ?? "?";
+    this.#salt = data.product.nutriments?.salt ?? "?";
+    this.#sodium = data.product.nutriments?.sodium ?? "?";
+    this.#quantity = data.product.quantity ?? "";
   }
-
-  get codeBarre(){
+  get codeBarre() {
     return this.#codeBarre;
   }
-  get imageUrl(){
+  get imageUrl() {
     return this.#imageUrl;
   }
   get name() {
