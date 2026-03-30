@@ -153,7 +153,7 @@ slider.addEventListener('input', () => {
 
   const scale = (value) => {
     const num = parseFloat(value);
-    return isNaN(num) ? "?" : (num * factor).toFixed(2);
+    return isNaN(num) ? value : (num * factor).toFixed(2);
   };
 
   const container = document.getElementById("product");
