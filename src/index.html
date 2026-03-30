@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="utf-8">
@@ -7,6 +7,8 @@
 
     <title>Scanner</title>
     <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500&display=swap"
         rel="stylesheet">
@@ -69,7 +71,11 @@
     </main>
 
     <script>
-        window.addEventListener('load', function () {
+        const notyf = new Notyf({
+            duration: 3000,
+            position: { x: 'right', y: 'top' },
+            dismissible: true
+        });
 
             let selectedDeviceId;
             const codeReader = new ZXing.BrowserMultiFormatReader();
@@ -94,38 +100,37 @@
                         };
 
                         document.getElementById('sourceSelectPanel').classList.remove('hidden');
+                    } else {
+                        notyf.error("Aucune caméra trouvée !");
                     }
-
-                    document.getElementById('startButton').addEventListener('click', () => {
-
-                        navigator.mediaDevices.getUserMedia({ video: true })
-                            .then(() => {
-                                codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
-
-                                    if (result) {
-                                        document.getElementById('result').innerHTML = result.text;
-                                        codeReader.reset();
-                                        window.location.href = `/src/product.html?code=${result.text}`;
-                                    }
-
-                                    if (err && !(err instanceof ZXing.NotFoundException)) {
-                                        document.getElementById('result').innerHTML = "Error";
-                                    }
-                                });
-                            });
-
-                    });
-
-                    document.getElementById('resetButton').addEventListener('click', () => {
-                        codeReader.reset();
-                        document.getElementById('result').innerHTML = '';
-                    });
-
+                })
+                .catch((err) => {
+                    notyf.error("Erreur lors de l'énumération des appareils : " + err);
                 });
 
-        });
+            document.getElementById('startButton').addEventListener('click', () => {
+                codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
+                    if (result) {
+                        document.getElementById('result').innerHTML = result.text;
+                        notyf.success("Code lu : " + result.text);
+                        window.location.href = `/src/product.html?code=${result.text}`;
+                    }
+                    if (err && !(err instanceof ZXing.NotFoundException)) {
+                        console.error(err);
+                        notyf.error("Erreur de caméra : " + err.message);
+                    }
+                }).catch(err => {
+                    notyf.error("Impossible d'accéder à la caméra !");
+                });
+            });
+
+            document.getElementById('resetButton').addEventListener('click', () => {
+                codeReader.reset();
+                document.getElementById('result').innerHTML = '';
+                notyf.success("Réinitialisé");
+            });
+        
     </script>
 
 </body>
-
-</html> 
+</html>

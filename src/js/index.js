@@ -1,6 +1,12 @@
 import Product from './Product.js';
 import httpsErrorCode from "./utils.js";
 
+const notyf = new Notyf({
+    duration: 0,
+    position: { x: 'right', y: 'top' },
+    dismissible: true
+});
+
 const BASE_URL = "https://world.openfoodfacts.org/api/v3/product/";
 const FIELDS = "nutriments,image_url,product_name_en,quantity";
 
@@ -113,7 +119,7 @@ async function handleFetch(productCode) {
       product = new Product(data);
       storeLocalStorage(product);
     } else {
-      console.warn("Product not found or API returned an error");
+      notyf.error("Produit non trouvé !");
       return null;
     }
   }
