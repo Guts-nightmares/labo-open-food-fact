@@ -1,10 +1,10 @@
-import Product from './Product.js';
+import Product from "./Product.js";
 import httpsErrorCode from "./utils.js";
 
 const notyf = new Notyf({
-    duration: 0,
-    position: { x: 'right', y: 'top' },
-    dismissible: true
+  duration: 0,
+  position: { x: "right", y: "top" },
+  dismissible: true,
 });
 
 const BASE_URL = "https://world.openfoodfacts.org/api/v3/product/";
@@ -56,10 +56,12 @@ async function fetchData(productCode) {
 }
 
 function displayProduct(product) {
-  const container = document.getElementById("product");
-  container.innerHTML = `
+  const skeleton = document.getElementById("product-skeleton");
+  const content = document.getElementById("product-content");
+
+  content.innerHTML = `
     <h2>${product.name}</h2>
-    <img src="${product.imageUrl}" alt="${product.name}" width="500" height="600">
+    <img src="${product.imageUrl}" alt="${product.name}" width="500" height="200">
     <div class="nutrient">Energy: ${product.energy} kcal</div>
     <div class="nutrient">Fat: ${product.fat} g</div>
     <div class="nutrient">Saturated Fat: ${product.saturatedFat} g</div>
@@ -71,6 +73,9 @@ function displayProduct(product) {
     <div class="nutrient">Sodium: ${product.sodium} g</div>
     <div class="nutrient">Quantity: ${product.quantity}</div>
   `;
+
+  skeleton.classList.add("hidden");
+  content.classList.remove("hidden");
 }
 
 function storeLocalStorage(product) {
@@ -84,7 +89,7 @@ function storeLocalStorage(product) {
       nutriments: {
         energy: product.energy,
         fat: product.fat,
-        ['saturated-fat']: product.saturatedFat,
+        ["saturated-fat"]: product.saturatedFat,
         carbohydrates: product.carbohydrates,
         sugars: product.sugars,
         fiber: product.fiber,
@@ -100,10 +105,10 @@ function storeLocalStorage(product) {
 }
 
 function getProductFromLocalStorageIfExist(productCode) {
-    const productsStr = localStorage.getItem("products");
-    if (!productsStr) return false;
-    const products = JSON.parse(productsStr);
-    return products[productCode] || false;
+  const productsStr = localStorage.getItem("products");
+  if (!productsStr) return false;
+  const products = JSON.parse(productsStr);
+  return products[productCode] || false;
 }
 
 async function handleFetch(productCode) {
@@ -138,23 +143,22 @@ async function handleFetch(productCode) {
 
 const slider = document.querySelector("#slider");
 
-slider.addEventListener('input', () => {
-    document.getElementById("value-slider").textContent = slider.value;
-    
-    if (!currentProduct) return;
+slider.addEventListener("input", () => {
+  document.getElementById("value-slider").textContent = slider.value;
 
-    const desiredQuantity = Number(slider.value);
-    const baseQuantity = parseFloat(currentProduct.quantity) || 1;
-    const factor = desiredQuantity / baseQuantity;
+  if (!currentProduct) return;
 
-    const scale = (value) => {
-        const num = parseFloat(value);
-        return isNaN(num) ? "?" : (num * factor).toFixed(2);
-    };
+  const desiredQuantity = Number(slider.value);
+  const baseQuantity = parseFloat(currentProduct.quantity) || 1;
+  const factor = desiredQuantity / baseQuantity;
 
+  const scale = (value) => {
+    const num = parseFloat(value);
+    return isNaN(num) ? "?" : (num * factor).toFixed(2);
+  };
 
-    const container = document.getElementById("product");
-    container.innerHTML = `
+  const container = document.getElementById("product");
+  container.innerHTML = `
     <h2>${currentProduct.name}</h2>
     <img src="${currentProduct.imageUrl}" alt="${currentProduct.name}" width="300">
     <div class="nutrient">Energy: ${scale(currentProduct.energy)} kcal</div>
@@ -172,10 +176,10 @@ slider.addEventListener('input', () => {
 let currentProduct = null;
 
 async function init() {
-    const code = new URLSearchParams(window.location.search).get("code");
-    if (code) {
-        currentProduct = await handleFetch(code);
-    }
+  const code = new URLSearchParams(window.location.search).get("code");
+  if (code) {
+    currentProduct = await handleFetch(code);
+  }
 }
 
 init();
