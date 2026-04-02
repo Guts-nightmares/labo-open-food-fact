@@ -10,6 +10,7 @@ const notyf = new Notyf({
 const BASE_URL = "https://world.openfoodfacts.org/api/v3/product/";
 const FIELDS = "nutriments,image_url,product_name_en,quantity";
 
+// Sécurisation contre l'injection (XSS)
 function escapeHTML(str) {
   if (typeof str !== "string") return str;
   return str.replace(
@@ -33,12 +34,13 @@ async function fetchData(productCode) {
     if (response.status === INTERNAL_SERVER_ERROR)
       throw new Error("Server error.");
     if (!response.ok) throw new Error(`Error: ${response.status}`);
-    return response.json();
+    return await response.json();
   } catch (err) {
     return { status: "error", message: err.message };
   }
 }
 
+// FONCTION DRY : Un seul endroit pour gérer l'affichage
 function renderProduct(product, desiredQuantity) {
   const baseQuantity = parseFloat(product.quantity) || 100;
   const factor = (desiredQuantity ?? baseQuantity) / baseQuantity;
