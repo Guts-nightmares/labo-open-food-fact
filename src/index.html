@@ -12,74 +12,46 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500&display=swap"
         rel="stylesheet">
-
 </head>
 
 <body class="bg-[#121212] text-gray-200 flex flex-col items-center justify-center min-h-screen p-6 font-[Inter]">
 
     <main class="flex flex-col items-center gap-8">
-
-        <h1 class="font-[Cinzel] text-3xl tracking-wide text-gray-300">
-            Scanner
-        </h1>
+        <h1 class="font-[Cinzel] text-3xl tracking-wide text-gray-300">Scanner</h1>
 
         <div class="flex gap-4">
-
-            <button id="startButton" class="px-6 py-2.5 rounded-lg bg-[#2a2a2a] border border-gray-600
-                   hover:bg-[#333] transition text-sm tracking-wide">
-                Start
-            </button>
-
-            <button id="resetButton" class="px-6 py-2.5 rounded-lg bg-[#1f1f1f] border border-gray-700
-                   hover:bg-[#2a2a2a] transition text-sm tracking-wide">
-                Reset
-            </button>
-
+            <button id="startButton"
+                class="px-6 py-2.5 rounded-lg bg-[#2a2a2a] border border-gray-600 hover:bg-[#333] transition text-sm tracking-wide">Start</button>
+            <button id="resetButton"
+                class="px-6 py-2.5 rounded-lg bg-[#1f1f1f] border border-gray-700 hover:bg-[#2a2a2a] transition text-sm tracking-wide">Reset</button>
         </div>
 
         <div class="bg-[#1a1a1a] p-4 rounded-xl border border-gray-700 shadow-md">
-            <video id="video" class="w-[320px] h-[220px] rounded-md bg-black">
-            </video>
+            <video id="video" class="w-[320px] h-[220px] rounded-md bg-black"></video>
         </div>
 
         <div id="sourceSelectPanel" class="hidden flex flex-col items-center gap-2">
             <label class="text-gray-400 text-sm">Camera</label>
-
-            <select id="sourceSelect" class="bg-[#1a1a1a] border border-gray-600 rounded-md px-3 py-2 text-sm">
-            </select>
+            <select id="sourceSelect" class="bg-[#1a1a1a] border border-gray-600 rounded-md px-3 py-2 text-sm"></select>
         </div>
 
         <div class="flex flex-col items-center gap-2">
-
-            <span class="text-gray-400 text-sm">
-                Result
-            </span>
-
-            <div id="result" class="w-52 h-14 flex items-center justify-center
-                   bg-[#1a1a1a] border border-gray-700 rounded-lg
-                   text-gray-200 text-sm">
+            <span class="text-gray-400 text-sm">Result</span>
+            <div id="result"
+                class="w-52 h-14 flex items-center justify-center bg-[#1a1a1a] border border-gray-700 rounded-lg text-gray-200 text-sm">
             </div>
-
         </div>
 
         <div id="search-with-code-div" class="flex items-center gap-3">
-
-            <input type="texte" inputmode="numeric" pattern="[0-9]*" id="search-with-code-codebar" placeholder="Code barre" class="w-40 px-3 py-2 rounded-md
-                    bg-[#1a1a1a] border border-gray-600
-                    text-sm text-gray-200
-                    focus:outline-none focus:border-gray-400
-                    transition">
-
-            <button class="px-5 py-2 rounded-lg
-                    bg-[#2a2a2a] border border-gray-600
-                    hover:bg-[#333] transition
-                    text-sm tracking-wide"
-                onclick="window.location.href = `/src/product.html?code=${document.querySelector('#search-with-code-codebar').value}`;">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="search-with-code-codebar"
+                placeholder="Code barre"
+                class="w-40 px-3 py-2 rounded-md bg-[#1a1a1a] border border-gray-600 text-sm text-gray-200 focus:outline-none focus:border-gray-400 transition">
+            <button
+                class="px-5 py-2 rounded-lg bg-[#2a2a2a] border border-gray-600 hover:bg-[#333] transition text-sm tracking-wide"
+                onclick="const val = document.querySelector('#search-with-code-codebar').value; if(val) window.location.href = `/src/product.html?code=${val}`;">
                 Go
             </button>
-
-</div>
-
+        </div>
     </main>
 
     <script>
@@ -89,60 +61,57 @@
             dismissible: true
         });
 
-            let selectedDeviceId;
-            const codeReader = new ZXing.BrowserMultiFormatReader();
+        let selectedDeviceId;
+        const codeReader = new ZXing.BrowserMultiFormatReader();
 
-            codeReader.listVideoInputDevices()
-                .then((videoInputDevices) => {
+        codeReader.listVideoInputDevices()
+            .then((videoInputDevices) => {
+                const sourceSelect = document.getElementById('sourceSelect');
+                selectedDeviceId = videoInputDevices[0].deviceId;
 
-                    const sourceSelect = document.getElementById('sourceSelect');
-                    selectedDeviceId = videoInputDevices[0].deviceId;
+                if (videoInputDevices.length >= 1) {
+                    videoInputDevices.forEach((element) => {
+                        const option = document.createElement('option');
+                        option.text = element.label;
+                        option.value = element.deviceId;
+                        sourceSelect.appendChild(option);
+                    });
 
-                    if (videoInputDevices.length >= 1) {
+                    sourceSelect.onchange = () => {
+                        selectedDeviceId = sourceSelect.value;
+                    };
 
-                        videoInputDevices.forEach((element) => {
-                            const option = document.createElement('option');
-                            option.text = element.label;
-                            option.value = element.deviceId;
-                            sourceSelect.appendChild(option);
-                        });
-
-                        sourceSelect.onchange = () => {
-                            selectedDeviceId = sourceSelect.value;
-                        };
-
-                        document.getElementById('sourceSelectPanel').classList.remove('hidden');
-                    } else {
-                        notyf.error("Aucune caméra trouvée !");
-                    }
-                })
-                .catch((err) => {
-                    notyf.error("Erreur lors de l'énumération des appareils : " + err);
-                });
-
-            document.getElementById('startButton').addEventListener('click', () => {
-                codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
-                    if (result) {
-                        document.getElementById('result').innerHTML = result.text;
-                        notyf.success("Code lu : " + result.text);
-                        window.location.href = `/src/product.html?code=${result.text}`;
-                    }
-                    if (err && !(err instanceof ZXing.NotFoundException)) {
-                        console.error(err);
-                        notyf.error("Erreur de caméra : " + err.message);
-                    }
-                }).catch(err => {
-                    notyf.error("Impossible d'accéder à la caméra !");
-                });
+                    document.getElementById('sourceSelectPanel').classList.remove('hidden');
+                } else {
+                    notyf.error("Aucune caméra trouvée !");
+                }
+            })
+            .catch((err) => {
+                notyf.error("Erreur lors de l'énumération des appareils : " + err);
             });
 
-            document.getElementById('resetButton').addEventListener('click', () => {
-                codeReader.reset();
-                document.getElementById('result').innerHTML = '';
-                notyf.success("Réinitialisé");
+        document.getElementById('startButton').addEventListener('click', () => {
+            codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
+                if (result) {
+                    document.getElementById('result').innerHTML = result.text;
+                    notyf.success("Code lu : " + result.text);
+                    window.location.href = `/src/product.html?code=${result.text}`;
+                }
+                if (err && !(err instanceof ZXing.NotFoundException)) {
+                    console.error(err);
+                    notyf.error("Erreur de caméra : " + err.message);
+                }
+            }).catch(err => {
+                notyf.error("Impossible d'accéder à la caméra !");
             });
-        
+        });
+
+        document.getElementById('resetButton').addEventListener('click', () => {
+            codeReader.reset();
+            document.getElementById('result').innerHTML = '';
+            notyf.success("Réinitialisé");
+        });
     </script>
-
 </body>
+
 </html>

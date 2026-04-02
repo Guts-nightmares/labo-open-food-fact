@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Product</title>
-
+    <title>Produit</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -16,34 +14,17 @@
 </head>
 
 <body class="bg-[#121212] text-gray-200 font-[Inter] flex justify-center items-center min-h-screen p-6">
-
     <main class="w-full max-w-xl flex flex-col items-center gap-6">
-
-        <h1 class="font-[Cinzel] text-3xl text-gray-300 tracking-wide">
-            Product
-        </h1>
-
+        <h1 class="font-[Cinzel] text-3xl text-gray-300">Product</h1>
         <div id="product"
-            class="w-full bg-[#1a1a1a] border border-gray-700 rounded-xl p-6 shadow-md flex flex-col gap-4 items-center">
+            class="w-full bg-[#1a1a1a] border border-gray-700 rounded-xl p-6 shadow-md flex flex-col items-center">
         </div>
-
-        <div id="error-message" class="text-red-400 text-sm">
-        </div>
-
         <div class="w-full flex flex-col gap-3 items-center">
-
-            <h2 class="text-gray-400 text-sm tracking-wide">
-                Quantity
-            </h2>
-
-            <input type="range" id="slider" max="200" step="10" class="w-full accent-gray-500">
+            <h2 class="text-gray-400 text-sm">Quantity</h2>
+            <input type="range" id="slider" class="w-full accent-gray-500">
             <span id="value-slider"></span>
-
         </div>
-
-
     </main>
-
 </body>
 
 </html>
