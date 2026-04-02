@@ -62,11 +62,23 @@
 
         </div>
 
-        <div id="search-with-code-div">
-            <input type="number" id="search-with-code-codebar" style="background-color: aqua;">
-            <input type="button" value="Go" style="background-color: aqua;"
+        <div id="search-with-code-div" class="flex items-center gap-3">
+
+            <input type="texte" inputmode="numeric" pattern="[0-9]*" id="search-with-code-codebar" placeholder="Code barre" class="w-40 px-3 py-2 rounded-md
+                    bg-[#1a1a1a] border border-gray-600
+                    text-sm text-gray-200
+                    focus:outline-none focus:border-gray-400
+                    transition">
+
+            <button class="px-5 py-2 rounded-lg
+                    bg-[#2a2a2a] border border-gray-600
+                    hover:bg-[#333] transition
+                    text-sm tracking-wide"
                 onclick="window.location.href = `/src/product.html?code=${document.querySelector('#search-with-code-codebar').value}`;">
-        </div>
+                Go
+            </button>
+
+</div>
 
     </main>
 
