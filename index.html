@@ -48,7 +48,7 @@
                 class="w-40 px-3 py-2 rounded-md bg-[#1a1a1a] border border-gray-600 text-sm text-gray-200 focus:outline-none focus:border-gray-400 transition">
             <button
                 class="px-5 py-2 rounded-lg bg-[#2a2a2a] border border-gray-600 hover:bg-[#333] transition text-sm tracking-wide"
-                onclick="const val = document.querySelector('#search-with-code-codebar').value; if(val) window.location.href = `/src/product.html?code=${val}`;">
+                onclick="const val = document.querySelector('#search-with-code-codebar').value; if(val) window.location.href = `/product.html?code=${val}`;">
                 Go
             </button>
         </div>
@@ -95,7 +95,7 @@
                 if (result) {
                     document.getElementById('result').innerHTML = result.text;
                     notyf.success("Code lu : " + result.text);
-                    window.location.href = `/src/product.html?code=${result.text}`;
+                    window.location.href = `/product.html?code=${result.text}`;
                 }
                 if (err && !(err instanceof ZXing.NotFoundException)) {
                     console.error(err);
