@@ -1,0 +1,1 @@
+You can access this site from: [https://devmob.ictge.ch/~ozgun/openfoodfacts/](https://devmob.ictge.ch/~ozgun/openfoodfacts/)
